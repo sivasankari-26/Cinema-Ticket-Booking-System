@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span>🎬 PVR Elite, Madurai</span>
+    <a href="/logout" class="btn btn-small">Logout</a>
+</div>
+<div class="container">
+    <div class="card">
+        <h2>Now Showing</h2>
+        <p>Select a movie to see available shows.</p>
+        <div class="movie-grid">
+            <div th:each="movie : ${movies}" class="movie-card">
+                <!-- Show poster if available, else show emoji -->
+                <img th:if="${movie.posterUrl != null and !movie.posterUrl.isEmpty()}"
+                     th:src="${movie.posterUrl}"
+                     alt="Movie Poster"
+                     class="movie-poster"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                <div class="movie-icon" th:style="${movie.posterUrl != null and !movie.posterUrl.isEmpty()} ? 'display:none' : ''">🎥</div>
+                <h3 th:text="${movie.title}">Movie Title</h3>
+                <p class="genre-tag" th:text="${movie.genre}">Genre</p>
+                <a th:href="@{/shows(movieId=${movie.id})}" class="btn btn-primary">View Shows</a>
+            </div>
+        </div>
+        <p th:if="${#lists.isEmpty(movies)}" class="no-data">No movies available right now.</p>
+    </div>
+</div>
+</body>
+</html>

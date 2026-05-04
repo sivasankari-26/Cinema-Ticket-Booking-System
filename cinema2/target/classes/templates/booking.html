@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Ticket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span>🎬 PVR Elite, Madurai</span>
+    <a href="/movies" class="btn btn-small">Back to Movies</a>
+    <a href="/logout" class="btn btn-small">Logout</a>
+</div>
+<div class="container">
+    <div class="card">
+        <h2>Booking Details</h2>
+
+        <table class="confirm-table" style="margin-bottom:20px;">
+            <tr>
+                <td><strong>Show ID</strong></td>
+                <td th:text="${show.id}">SH1</td>
+            </tr>
+            <tr>
+                <td><strong>Show Time</strong></td>
+                <td th:text="${show.showTime}">10:00 AM</td>
+            </tr>
+            <tr>
+                <td><strong>Selected Seats</strong></td>
+                <td>
+                    <span th:each="seat, iter : ${seatNumbers}">
+                        <span th:text="${seat}"></span><span th:if="${!iter.last}">, </span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Total Seats</strong></td>
+                <td th:text="${seatNumbers.size()}">1</td>
+            </tr>
+        </table>
+
+        <form action="/booking/confirm" method="post">
+            <input type="hidden" name="showId" th:value="${show.id}" />
+            <div th:each="seat : ${seatNumbers}">
+                <input type="hidden" name="seatNumbers" th:value="${seat}" />
+            </div>
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="customerName" placeholder="Enter your name" required />
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone" placeholder="Enter phone number" required />
+            </div>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select name="paymentType" required>
+                    <option value="">-- Select Payment --</option>
+                    <option value="Card">Card</option>
+                    <option value="UPI">UPI</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Confirmed</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span>🎬 PVR Elite, Madurai</span>
+    <a href="/logout" class="btn btn-small">Logout</a>
+</div>
+<div class="container">
+    <div class="card confirm-card">
+        <div class="confirm-icon">✅</div>
+        <h2>Booking Confirmed!</h2>
+
+        <!-- Lucky seat message -->
+        <div th:if="${lucky}" class="lucky-box">
+            🎉 Congratulations! You got a Lucky Seat (B3)!
+        </div>
+
+        <table class="confirm-table">
+            <tr>
+                <td><strong>Name</strong></td>
+                <td th:text="${customerName}">John</td>
+            </tr>
+            <tr>
+                <td><strong>Show ID</strong></td>
+                <td th:text="${showId}">SH1</td>
+            </tr>
+            <tr>
+                <td><strong>Seats Booked</strong></td>
+                <td>
+                    <span th:each="seat, iter : ${seatNumbers}">
+                        <span th:text="${seat}"></span><span th:if="${!iter.last}">, </span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Total Seats</strong></td>
+                <td th:text="${seatNumbers.size()}">1</td>
+            </tr>
+            <tr>
+                <td><strong>Payment</strong></td>
+                <td th:text="${paymentType}">UPI</td>
+            </tr>
+        </table>
+
+        <a href="/movies" class="btn btn-primary">Book Another Ticket</a>
+    </div>
+</div>
+</body>
+</html>

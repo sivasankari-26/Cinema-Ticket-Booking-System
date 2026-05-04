@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span>🎬 PVR Elite — Admin Panel</span>
+    <a href="/logout" class="btn btn-small">Logout</a>
+</div>
+<div class="container">
+
+    <!-- Add Movie -->
+    <div class="card">
+        <h2>Add Movie</h2>
+        <form action="/admin/add-movie" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Movie ID</label>
+                    <input type="text" name="id" placeholder="e.g. M3" required />
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" placeholder="Movie title" required />
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <input type="text" name="genre" placeholder="e.g. Action" required />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Movie</button>
+        </form>
+    </div>
+
+    <!-- Add Show -->
+    <div class="card">
+        <h2>Add Show</h2>
+        <div th:if="${showError}" style="background:#ffe0e0;color:#c00;border:1px solid #f99;padding:10px 14px;border-radius:6px;margin-bottom:12px;">
+            ⚠️ <span th:text="${showError}"></span>
+        </div>
+        <form action="/admin/add-show" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Show ID</label>
+                    <input type="text" name="id" placeholder="e.g. SH3" required />
+                </div>
+                <div class="form-group">
+                    <label>Show Time</label>
+                    <input type="text" name="showTime" placeholder="e.g. 06:00 PM" required />
+                </div>
+                <div class="form-group">
+                    <label>Screen Number</label>
+                    <select name="screenNumber" required>
+                        <option value="">-- Select Screen --</option>
+                        <option value="1">Screen 1</option>
+                        <option value="2">Screen 2</option>
+                        <option value="3">Screen 3</option>
+                        <option value="4">Screen 4</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Movie</label>
+                    <select name="movieId" required>
+                        <option value="">-- Select Movie --</option>
+                        <option th:each="movie : ${movies}"
+                                th:value="${movie.id}"
+                                th:text="${movie.id + ' - ' + movie.title}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Show</button>
+        </form>
+    </div>
+
+    <!-- Movies List -->
+    <div class="card">
+        <h2>All Movies</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Title</th><th>Genre</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${movies}">
+                    <td th:text="${m.id}"></td>
+                    <td th:text="${m.title}"></td>
+                    <td th:text="${m.genre}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(movies)}" class="no-data">No movies added yet.</p>
+    </div>
+
+    <!-- Shows List -->
+    <div class="card">
+        <h2>All Shows</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Time</th><th>Screen</th><th>Movie ID</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="s : ${shows}">
+                    <td th:text="${s.id}"></td>
+                    <td th:text="${s.showTime}"></td>
+                    <td th:text="${'Screen ' + s.screenNumber}"></td>
+                    <td th:text="${s.movieId}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(shows)}" class="no-data">No shows added yet.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+        <h2>Actions</h2>
+        <a href="/admin/bookings" class="btn btn-primary">View All Bookings</a>
+        &nbsp;
+        <form action="/admin/reset" method="post" style="display:inline;"
+              onsubmit="return confirm('Reset ALL data? This cannot be undone!');">
+            <button type="submit" class="btn btn-danger">Reset All Data</button>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

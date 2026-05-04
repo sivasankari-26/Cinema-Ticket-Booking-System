@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shows</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span>🎬 PVR Elite, Madurai</span>
+    <a href="/movies" class="btn btn-small">Back</a>
+    <a href="/logout" class="btn btn-small">Logout</a>
+</div>
+<div class="container">
+    <div class="card">
+        <h2>Shows for: <span th:text="${movie.title}">Movie</span></h2>
+        <p>Genre: <strong th:text="${movie.genre}">Genre</strong></p>
+        <table th:if="${!#lists.isEmpty(shows)}">
+            <thead>
+                <tr>
+                    <th>Show ID</th>
+                    <th>Show Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="show : ${shows}">
+                    <td th:text="${show.id}">SH1</td>
+                    <td th:text="${show.showTime}">10:00 AM</td>
+                    <td>
+                        <a th:href="@{/seats(showId=${show.id})}" class="btn btn-primary">Select Seats</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(shows)}" class="no-data">No shows available for this movie.</p>
+    </div>
+</div>
+</body>
+</html>

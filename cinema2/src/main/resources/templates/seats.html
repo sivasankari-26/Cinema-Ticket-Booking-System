@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Seat</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span>🎬 PVR Elite, Madurai</span>
+    <a href="/movies" class="btn btn-small">Back to Movies</a>
+    <a href="/logout" class="btn btn-small">Logout</a>
+</div>
+<div class="container">
+    <div class="card">
+        <h2>Select Your Seat(s)</h2>
+        <p>Show: <strong th:text="${show.id}"></strong> &nbsp;|&nbsp;
+           Time: <strong th:text="${show.showTime}"></strong></p>
+        <p style="color:#e94560; font-size:14px;">
+            Click seats to select. You can select multiple seats for your family.
+        </p>
+
+        <!-- Screen -->
+        <div class="screen-box">🎞 SCREEN</div>
+
+        <!-- Seat Form -->
+        <form action="/booking" method="get" id="seatForm">
+            <input type="hidden" name="showId" th:value="${show.id}" />
+
+            <div class="seat-grid">
+                <div th:each="seat : ${seats}">
+
+                    <!-- AVAILABLE seat -->
+                    <label th:if="${seat.status}"
+                           class="seat available"
+                           th:for="${seat.seatNumber}"
+                           onclick="toggleSeat(this)">
+                        <input type="checkbox"
+                               name="seatNumbers"
+                               th:id="${seat.seatNumber}"
+                               th:value="${seat.seatNumber}"
+                               style="display:none;" />
+                        <span th:text="${seat.seatNumber}">A1</span>
+                    </label>
+
+                    <!-- BOOKED seat -->
+                    <button th:unless="${seat.status}"
+                            type="button"
+                            class="seat booked"
+                            disabled
+                            th:text="${seat.seatNumber}">A1</button>
+                </div>
+            </div>
+
+            <!-- Selected info -->
+            <div id="selectedInfo" style="text-align:center; margin:15px 0;
+                 font-size:15px; font-weight:bold; color:#333;">
+                No seats selected
+            </div>
+
+            <div style="text-align:center;">
+                <button type="button" class="btn btn-primary" onclick="proceedToBooking()">
+                    Proceed to Booking &rarr;
+                </button>
+            </div>
+        </form>
+
+        <!-- Legend -->
+        <div class="legend" style="margin-top:25px;">
+            <span class="seat available" style="pointer-events:none;">A1</span> Available &nbsp;&nbsp;
+            <span class="seat selected-seat" style="pointer-events:none;">A2</span> Selected &nbsp;&nbsp;
+            <span class="seat booked" style="pointer-events:none;">B3</span> Booked
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSeat(label) {
+        var checkbox = label.querySelector('input[type=checkbox]');
+        checkbox.checked = !checkbox.checked;
+        if (checkbox.checked) {
+            label.classList.add('selected-seat');
+        } else {
+            label.classList.remove('selected-seat');
+        }
+        updateInfo();
+    }
+
+    function updateInfo() {
+        var checked = document.querySelectorAll('input[name=seatNumbers]:checked');
+        var info = document.getElementById('selectedInfo');
+        if (checked.length === 0) {
+            info.textContent = 'No seats selected';
+            info.style.color = '#333';
+        } else {
+            var seats = Array.from(checked).map(function(c) { return c.value; });
+            info.textContent = 'Selected ' + checked.length + ' seat(s): ' + seats.join(', ');
+            info.style.color = '#e94560';
+        }
+    }
+
+    function proceedToBooking() {
+        var checked = document.querySelectorAll('input[name=seatNumbers]:checked');
+        if (checked.length === 0) {
+            alert('Please select at least one seat!');
+            return;
+        }
+        document.getElementById('seatForm').submit();
+    }
+</script>
+
+</body>
+</html>
